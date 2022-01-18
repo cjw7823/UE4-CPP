@@ -28,7 +28,6 @@ AAHybridSphere::AAHybridSphere()
 
 	OnActorBeginOverlap.AddDynamic(this, &AAHybridSphere::MyOnBeginOverlap);
 	OnActorEndOverlap.AddDynamic(this, &AAHybridSphere::MyOnEndOverlap);
-
 }
 
 // Called when the game starts or when spawned

@@ -45,6 +45,4 @@ protected:
 	void MyOnEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 	void MyOnEndOverlap_Implementation(AActor* OverlappedActor, AActor* OtherActor);
-
-
 };
