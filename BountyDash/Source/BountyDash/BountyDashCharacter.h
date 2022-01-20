@@ -48,7 +48,7 @@ protected:
 		class UCameraComponent* FollowCamera;
 
 	UPROPERTY(BlueprintReadOnly)
-		int32 score;
+		int32 Score;
 
 private:
 	short CurrentLocation;

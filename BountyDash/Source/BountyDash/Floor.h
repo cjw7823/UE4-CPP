@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "BountyDash.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
 #include "Floor.generated.h"
@@ -32,7 +32,7 @@ protected:
 	TArray<USceneComponent*> FloorMeshScenes;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UStaticMeshComponent*> floorMeshes;
+	TArray<UStaticMeshComponent*> FloorMeshes;
 
 	UPROPERTY(EditAnywhere)
 	UBoxComponent* CollisionBox;

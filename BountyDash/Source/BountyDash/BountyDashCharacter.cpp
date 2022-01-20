@@ -9,6 +9,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/TargetPoint.h"
 #include "EngineUtils.h"
+#include "Obstacle.h"
+#include "BountyDashGameMode.h"
 
 
 // Sets default values
@@ -93,6 +95,12 @@ void ABountyDashCharacter::Tick(float DeltaTime)
 			SetActorLocation(FMath::Lerp(GetActorLocation(), targetLoc, CharSpeed * DeltaTime));
 		}
 	}
+	
+	if (bBeingPushed)
+	{
+		float moveSpeed = GetCustomGameMode<ABountyDashGameMode>(GetWorld())->GetInvGameSpeed();
+		AddActorLocalOffset(FVector(moveSpeed, 0.0f, 0.0f));
+	}
 
 }
 
@@ -107,6 +115,12 @@ void ABountyDashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	InputComponent->BindAction("MoveRight", IE_Pressed, this, &ABountyDashCharacter::MoveRight);
 	InputComponent->BindAction("MoveLeft", IE_Pressed, this, &ABountyDashCharacter::MoveLeft);
 
+}
+
+void ABountyDashCharacter::ScoreUp()
+{
+	Score++;
+	GetCustomGameMode<ABountyDashGameMode>(GetWorld())->CharScoreUp(Score);
 }
 
 void ABountyDashCharacter::MoveRight()
@@ -141,9 +155,25 @@ void ABountyDashCharacter::MoveLeft()
 
 void ABountyDashCharacter::MyOnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor->GetClass()->IsChildOf(AObstacle::StaticClass()))
+	{
+		FVector vecBetween = OtherActor->GetActorLocation() - GetActorLocation();
+		float AngleBetween = FMath::Acos(FVector::DotProduct(vecBetween.GetSafeNormal(), GetActorForwardVector().GetSafeNormal()));
+
+		AngleBetween *= (180 / PI);
+
+		if (AngleBetween < 60.0f)
+		{
+			bBeingPushed = true;
+		}
+	}
 }
 
 void ABountyDashCharacter::MyOnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	if (OtherActor->GetClass()->IsChildOf(AObstacle::StaticClass()))
+	{
+		bBeingPushed = false;
+	}
 }
 
